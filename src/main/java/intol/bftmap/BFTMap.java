@@ -119,20 +119,34 @@ public class BFTMap<K, V> implements Map<K, V> {
             return -1;
         }
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+    public int mintNFT(String name, String uri, double nftValue) {
+    	byte[] rep;
+    	try {
+    		DTIMessage<K,V> request = new DTIMessage<>();
+    		request.setType(DTIRequests.MINT_NFT);
+    		request.setValue(nftValue);
+    		request.setName(name);
+    		request.setUri(uri);
+    		
+    		rep = serviceProxy.invokeOrdered(DTIMessage.toBytes(request));
+    	} catch (IOException e) {
+            logger.error("Failed to send MINT_NFT request");
+            return -1;
+        }
+    	
+    	if (rep.length == 0) {
+            return -1;
+        }
+    	
+    	try {
+    		DTIMessage<K,V> response = DTIMessage.fromBytes(rep);
+    		return (int) response.getValue();
+    	} catch (ClassNotFoundException | IOException ex) {
+            logger.error("Failed to deserialized response of MINT request");
+            return -1;
+        }
+    }
 
     @Override
     public int size() {

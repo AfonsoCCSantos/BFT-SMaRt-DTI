@@ -11,6 +11,8 @@ public class DTIMessage<K,V> implements Serializable {
 	private DTIRequests type;
 	private V value;
 	private K key;
+	private String name;
+	private String uri;
 	
 	public DTIMessage() {}
 	
@@ -57,8 +59,22 @@ public class DTIMessage<K,V> implements Serializable {
     public void setKey(Object key) {
         this.key = (K)key;
     }
+    
+    public String getName() {
+        return name;
+    }
+    
+    public void setName(String name) {
+        this.name = name;
+    }
 	
+    public String getUri() {
+        return uri;
+    }
 	
+	public void setUri(String uri) {
+        this.uri = uri;
+    }
 	
 
 }

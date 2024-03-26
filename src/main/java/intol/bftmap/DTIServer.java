@@ -20,9 +20,10 @@ import intol.bftmap.models.NFT;
 
 public class DTIServer<K, V> extends DefaultSingleRecoverable {
 	
+	private final int AUTHORIZED_CLIENT_TO_MINT = 4;
 	private final Logger logger = LoggerFactory.getLogger("bftsmart");
 	private TreeMap<Integer, Coin> replicaMapCoins;
-	private TreeMap<Integer, NFT> replicaMapNfts;
+	private TreeMap<Integer, NFT> replicaMapNFTs;
 	private int counterCoins;
 	private int counterNFTs;
 	
@@ -50,17 +51,34 @@ public class DTIServer<K, V> extends DefaultSingleRecoverable {
             DTIMessage<K,V> response = new DTIMessage<>();
             DTIMessage<K,V> request = DTIMessage.fromBytes(command);
             DTIRequests cmd = request.getType();
-
+            
             logger.info("Ordered execution of a {} request from {}", cmd, msgCtx.getSender());
 
             switch (cmd) {
                 case MINT:
-                	Coin coin = new Coin(counterCoins, msgCtx.getSender(), (int) response.getValue());
-                	Coin value = replicaMapCoins.put(counterCoins, coin);
-
-                    response.setValue(value.getId());
+                	double coinValue = (double) request.getValue();
+                	if (!(msgCtx.getSender() != AUTHORIZED_CLIENT_TO_MINT) || coinValue <= 0) {
+                		response.setValue(-1);
+                		return DTIMessage.toBytes(response);
+                	}
+                	Coin coin = new Coin(counterCoins, msgCtx.getSender() , coinValue);
+                	Coin newCoinValue = replicaMapCoins.put(counterCoins, coin);
+                    response.setValue(newCoinValue.getId());
                     counterCoins++;
                     return DTIMessage.toBytes(response);
+                    
+                case MINT_NFT:
+                	double nftValue = (double) request.getValue();
+                	if (!(msgCtx.getSender() != AUTHORIZED_CLIENT_TO_MINT || nftValue <= 0)) {
+                		response.setValue(-1);
+                		return DTIMessage.toBytes(response);
+                	}
+                	
+                	NFT nft = new NFT(counterNFTs, msgCtx.getSender() , request.getName() , request.getUri() , nftValue);
+                	NFT newNFTValue = replicaMapNFTs.put(counterNFTs, nft);
+                	response.setValue(newNFTValue.getId());
+                	counterNFTs++;
+                	return DTIMessage.toBytes(response);
             }
 
             return null;
