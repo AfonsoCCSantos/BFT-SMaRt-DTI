@@ -20,8 +20,6 @@ import intol.bftmap.models.NFT;
 public class DTIServer extends DefaultSingleRecoverable {
 	
 	private final Logger logger = LoggerFactory.getLogger("bftsmart");
-	private TreeMap<Integer, Coin> coinsMap;
-	private TreeMap<Integer, NFT> nftsMap;
 	
 	@Override
 	public byte[] appExecuteOrdered(byte[] command, MessageContext msgCtx) {
