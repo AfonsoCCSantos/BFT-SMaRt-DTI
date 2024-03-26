@@ -36,7 +36,7 @@ public class BFTMapInteractiveClient {
                     continue;
                 }
                 String value = console.readLine("Enter an alpha-numeric value: ");
-
+                
                 //invokes the op on the servers
                 bftMap.put(key, value);
 

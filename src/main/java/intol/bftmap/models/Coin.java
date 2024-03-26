@@ -12,6 +12,11 @@ public class Coin {
 		this.ownerId = ownerId;
 		this.value = value;
 	}
+	
+	public Coin(double value) {
+		super();
+		this.value = value;
+	}
 
 	public int getId() {
 		return id;

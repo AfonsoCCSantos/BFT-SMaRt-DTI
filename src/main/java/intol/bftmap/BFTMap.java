@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
+import intol.bftmap.models.Coin;
+import intol.bftmap.models.NFT;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +23,7 @@ public class BFTMap<K, V> implements Map<K, V> {
     public BFTMap(int id) {
         serviceProxy = new ServiceProxy(id);
     }
-
+    
     /**
      *
      * @param key The key associated to the value
@@ -34,7 +36,7 @@ public class BFTMap<K, V> implements Map<K, V> {
             BFTMapMessage<K,V> request = new BFTMapMessage<>();
             request.setType(BFTMapRequestType.GET);
             request.setKey(key);
-
+            
             //invokes BFT-SMaRt
             rep = serviceProxy.invokeUnordered(BFTMapMessage.toBytes(request));
         } catch (IOException e) {
@@ -63,13 +65,12 @@ public class BFTMap<K, V> implements Map<K, V> {
     public V put(K key, V value) {
         byte[] rep;
         try {
-            BFTMapMessage<K,V> request = new BFTMapMessage<>();
-            request.setType(BFTMapRequestType.PUT);
-            request.setKey(key);
+            DTIMessage<K,V> request = new DTIMessage<>();
+            request.setType(DTIRequests.MINT);
             request.setValue(value);
 
             //invokes BFT-SMaRt
-            rep = serviceProxy.invokeOrdered(BFTMapMessage.toBytes(request));
+            rep = serviceProxy.invokeOrdered(DTIMessage.toBytes(request));
         } catch (IOException e) {
             logger.error("Failed to send PUT request");
             return null;
@@ -86,6 +87,52 @@ public class BFTMap<K, V> implements Map<K, V> {
             return null;
         }
     }
+    
+    /**
+     * Method created to be able to mint a new coin.
+     * 
+     * @param coinValue
+     * @return
+     */
+    public int mintCoin(double coinValue) {
+    	byte[] rep;
+    	try {
+    		DTIMessage<K,V> request = new DTIMessage<>();
+    		request.setType(DTIRequests.MINT);
+    		request.setValue(coinValue);
+    		
+    		rep = serviceProxy.invokeOrdered(DTIMessage.toBytes(request));
+    	} catch (IOException e) {
+            logger.error("Failed to send MINT request");
+            return -1;
+        }
+    	
+    	if (rep.length == 0) {
+            return -1;
+        }
+    	
+    	try {
+    		DTIMessage<K,V> response = DTIMessage.fromBytes(rep);
+    		return (int) response.getValue();
+    	} catch (ClassNotFoundException | IOException ex) {
+            logger.error("Failed to deserialized response of MINT request");
+            return -1;
+        }
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
     @Override
     public int size() {
@@ -112,6 +159,8 @@ public class BFTMap<K, V> implements Map<K, V> {
             return -1;
         }
     }
+    
+    
 
     @Override
     public V remove(Object key) {

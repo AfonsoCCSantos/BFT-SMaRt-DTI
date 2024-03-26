@@ -32,7 +32,7 @@ public class BFTMapServer<K, V> extends DefaultSingleRecoverable {
         }
         new BFTMapServer<Integer, String>(Integer.parseInt(args[0]));
     }
-
+    
     @Override
     public byte[] appExecuteOrdered(byte[] command, MessageContext msgCtx) {
         //all operations must be defined here to be invoked by BFT-SMaRt

@@ -13,18 +13,61 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import bftsmart.tom.MessageContext;
+import bftsmart.tom.ServiceReplica;
 import bftsmart.tom.server.defaultservices.DefaultSingleRecoverable;
 import intol.bftmap.models.Coin;
 import intol.bftmap.models.NFT;
 
-public class DTIServer extends DefaultSingleRecoverable {
+public class DTIServer<K, V> extends DefaultSingleRecoverable {
 	
 	private final Logger logger = LoggerFactory.getLogger("bftsmart");
+	private TreeMap<Integer, Coin> replicaMapCoins;
+	private TreeMap<Integer, NFT> replicaMapNfts;
+	private int counterCoins;
+	private int counterNFTs;
 	
+	
+	public DTIServer(int id) {
+		replicaMapCoins = new TreeMap<>();
+		replicaMapCoins = new TreeMap<>();
+		counterCoins = 0;
+		counterNFTs = 0;
+		
+		new ServiceReplica(id, this, this);
+	}
+	
+	public static void main(String[] args) {
+        if (args.length < 1) {
+            System.out.println("Use: java DTIServer <server id>");
+            System.exit(-1);
+        }
+        new DTIServer<Integer, String>(Integer.parseInt(args[0]));
+    }
+
 	@Override
 	public byte[] appExecuteOrdered(byte[] command, MessageContext msgCtx) {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+            DTIMessage<K,V> response = new DTIMessage<>();
+            DTIMessage<K,V> request = DTIMessage.fromBytes(command);
+            DTIRequests cmd = request.getType();
+
+            logger.info("Ordered execution of a {} request from {}", cmd, msgCtx.getSender());
+
+            switch (cmd) {
+                case MINT:
+                	Coin coin = new Coin(counterCoins, msgCtx.getSender(), (int) response.getValue());
+                	Coin value = replicaMapCoins.put(counterCoins, coin);
+
+                    response.setValue(value.getId());
+                    counterCoins++;
+                    return DTIMessage.toBytes(response);
+            }
+
+            return null;
+        }catch (IOException | ClassNotFoundException ex) {
+            logger.error("Failed to process ordered request", ex);
+            return new byte[0];
+        }
 	}
 
 	@Override
