@@ -6,6 +6,7 @@ package intol.bftmap;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import intol.bftmap.models.Coin;
@@ -84,6 +85,31 @@ public class BFTMap<K, V> implements Map<K, V> {
             return response.getValue();
         } catch (ClassNotFoundException | IOException ex) {
             logger.error("Failed to deserialized response of PUT request");
+            return null;
+        }
+    }
+
+    public HashSet<Coin> getMyCoins() {
+        byte[] rep;
+        try {
+            DTIMessage<K,V> request = new DTIMessage<>();
+            request.setType(DTIRequests.MY_COINS);
+
+            //invokes BFT-SMaRt
+            rep = serviceProxy.invokeUnordered(DTIMessage.toBytes(request));
+        } catch (IOException e) {
+            logger.error("Failed to send MY_COINS request");
+            return null;
+        }
+        if (rep.length == 0) {
+            return null;
+        }
+
+        try {
+    		DTIMessage<K,V> response = DTIMessage.fromBytes(rep);
+    		return (HashSet<Coin>) response.getCoinSet();
+    	} catch (ClassNotFoundException | IOException ex) {
+            logger.error("Failed to deserialized response of MY_COINS request");
             return null;
         }
     }

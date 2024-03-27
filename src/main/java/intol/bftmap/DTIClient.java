@@ -3,6 +3,7 @@ package intol.bftmap;
 import intol.bftmap.models.Coin;
 import intol.bftmap.models.NFT;
 import java.io.Console;
+import java.util.HashSet;
 
 public class DTIClient {
 	
@@ -28,6 +29,18 @@ public class DTIClient {
             String cmd = console.readLine("\n  > ");
 
             if (cmd.equalsIgnoreCase("MY_COINS")) {
+                //invokes the op on the servers
+                HashSet<Coin>  myCoins = coinMap.getMyCoins();
+
+                if (myCoins == null) {
+                	System.out.println("\n The operation failed");
+                } 
+                else {
+                    System.out.println("\nYour coins:\n");
+                    for(Coin c : myCoins) {
+                        System.out.println("Coin " + c.getId() + " with value " + c.getValue() + "\n");
+                    }  
+                }
 
             } 
             else if (cmd.equalsIgnoreCase("MINT")) {

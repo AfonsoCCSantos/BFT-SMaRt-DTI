@@ -1,6 +1,10 @@
 package intol.bftmap;
 
 import java.io.Serializable;
+import java.util.HashSet;
+
+import intol.bftmap.models.Coin;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
@@ -13,6 +17,7 @@ public class DTIMessage<K,V> implements Serializable {
 	private K key;
 	private String name;
 	private String uri;
+    private HashSet<Coin> coinSet;
 	
 	public DTIMessage() {}
 	
@@ -75,6 +80,13 @@ public class DTIMessage<K,V> implements Serializable {
 	public void setUri(String uri) {
         this.uri = uri;
     }
-	
+
+    public HashSet<Coin> getCoinSet() {
+        return coinSet;
+    }
+
+    public void setCoinSet(HashSet<Coin> coinSet) {
+        this.coinSet = coinSet;
+    }
 
 }

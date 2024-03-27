@@ -7,6 +7,7 @@ import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
+import java.util.HashSet;
 import java.util.TreeMap;
 
 import org.slf4j.Logger;
@@ -90,8 +91,31 @@ public class DTIServer<K, V> extends DefaultSingleRecoverable {
 
 	@Override
 	public byte[] appExecuteUnordered(byte[] command, MessageContext msgCtx) {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+            DTIMessage<K,V> response = new DTIMessage<>();
+            DTIMessage<K,V> request = DTIMessage.fromBytes(command);
+            DTIRequests cmd = request.getType();
+
+            logger.info("Unordered execution of a {} request from {}", cmd, msgCtx.getSender());
+
+            switch (cmd) {
+                case MY_COINS:
+					HashSet<Coin> userCoins = new HashSet<>();
+
+					for(Coin c : replicaMapCoins.values()) {
+						if(c.getOwnerId() == msgCtx.getSender()) userCoins.add(c); 
+					}
+
+                    if (userCoins != null) {
+                        response.setCoinSet(userCoins);
+                    }
+                    return DTIMessage.toBytes(response);
+            }
+        } catch (IOException | ClassNotFoundException ex) {
+            logger.error("Failed to process unordered request", ex);
+            return new byte[0];
+        }
+        return null;
 	}
 	
 
