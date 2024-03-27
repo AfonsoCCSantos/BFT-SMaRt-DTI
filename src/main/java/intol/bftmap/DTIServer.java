@@ -80,6 +80,21 @@ public class DTIServer<K, V> extends DefaultSingleRecoverable {
                 	response.setValue(newNFTValue.getId());
                 	counterNFTs++;
                 	return DTIMessage.toBytes(response);
+				case SET_NFT_PRICE:
+					int nftId = (int) request.getKey();
+                	nftValue = (double) request.getValue();
+					nft = replicaMapNFTs.get(nftId);
+
+                	if (nft == null || msgCtx.getSender() != nft.getOwnerId() || nftValue <= 0) {
+                		response.setValue(-1);
+                		return DTIMessage.toBytes(response);
+                	}
+
+					nft.setValue(nftValue);
+                	replicaMapNFTs.put(nftId, nft);
+
+                	response.setValue(nft.getId());
+                	return DTIMessage.toBytes(response);
             }
 
             return null;

@@ -44,7 +44,6 @@ public class DTIClient {
 
             } 
             else if (cmd.equalsIgnoreCase("MINT")) {
-				
 				double value;
                 try {
                     value = Integer.parseInt(console.readLine("Enter a value: "));
@@ -102,8 +101,30 @@ public class DTIClient {
                 
                 
 			} else if (cmd.equalsIgnoreCase("SET_NFT_PRICE")) {
+                int nftId;
+                double newValue;
+                try {
+                    nftId = Integer.parseInt(console.readLine("Enter the id of the NFT to be changed: "));
+                } catch (NumberFormatException e) {
+                    System.out.println("\tThe value is supposed to be a integer!\n");
+                    continue;
+                }
 
-
+                try {
+                    newValue = Double.parseDouble(console.readLine("Enter the new value for the NFT: "));
+                } catch (NumberFormatException e) {
+                    System.out.println("\tThe value is supposed to be a number!\n");
+                    continue;
+                }
+                
+                // invokes the op on the servers
+                int id = nftMap.setNFTPrice(nftId, newValue);
+                if (id == -1) {
+                	System.out.println("\n The operation failed");
+                }
+                else {
+                	System.out.println("\nThe NFT with id " + id + " was changed.\n");		
+                }
 			} else if (cmd.equalsIgnoreCase("SEARCH_NFT")) {
 
 
