@@ -126,6 +126,37 @@ public class DTIServer<K, V> extends DefaultSingleRecoverable {
 
                 	response.setValue(nft.getId());
                 	return DTIMessage.toBytes(response);
+				case BUY_NFT:
+                	coinIds = request.getIdSet();
+					NFT nftToBuy = replicaMapNFTs.get((int) request.getValue());  
+					totalValue = 0;
+
+					for(int coinId : coinIds) {
+						Coin c = replicaMapCoins.remove(coinId); 
+						if(c != null) totalValue += c.getValue();
+					}
+
+                	if (totalValue < nftToBuy.getValue()) {
+                		response.setValue(-1);
+                		return DTIMessage.toBytes(response);
+                	}
+
+                	Coin coinToNFTOwner = new Coin(counterCoins, nftToBuy.getOwnerId(), nftToBuy.getValue());
+					replicaMapCoins.put(counterCoins, coinToNFTOwner);
+                    counterCoins++;
+
+					nftToBuy.setOwnerId(msgCtx.getSender());
+
+					if(totalValue == nftToBuy.getValue()) {
+						response.setValue(0);
+                		return DTIMessage.toBytes(response);
+					}
+
+					remainingValueCoin = new Coin(counterCoins, msgCtx.getSender(), totalValue - nftToBuy.getValue());
+					replicaMapCoins.put(counterCoins, remainingValueCoin);
+					response.setValue(counterCoins);
+                    counterCoins++;
+                    return DTIMessage.toBytes(response);
             }
 
             return null;

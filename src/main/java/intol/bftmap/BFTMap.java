@@ -280,6 +280,33 @@ public class BFTMap<K, V> implements Map<K, V> {
         }
     }
 
+    public int buyNFT(HashSet<Integer> coinIds, int nftId) {
+    	byte[] rep;
+    	try {
+    		DTIMessage<K,V> request = new DTIMessage<>();
+    		request.setType(DTIRequests.BUY_NFT);
+    		request.setValue(nftId);
+            request.setIdSet(coinIds);
+    		
+    		rep = serviceProxy.invokeOrdered(DTIMessage.toBytes(request));
+    	} catch (IOException e) {
+            logger.error("Failed to send BUY_NFT request");
+            return -1;
+        }
+    	
+    	if (rep.length == 0) {
+            return -1;
+        }
+    	
+    	try {
+    		DTIMessage<K,V> response = DTIMessage.fromBytes(rep);
+    		return (int) response.getValue();
+    	} catch (ClassNotFoundException | IOException ex) {
+            logger.error("Failed to deserialized response of BUY_NFT request");
+            return -1;
+        }
+    }
+
     @Override
     public int size() {
         byte[] rep;
