@@ -252,6 +252,34 @@ public class BFTMap<K, V> implements Map<K, V> {
         }
     }
 
+    public int spendCoins(HashSet<Integer> coinIds, int receiverId, int value) {
+    	byte[] rep;
+    	try {
+    		DTIMessage<K,V> request = new DTIMessage<>();
+    		request.setType(DTIRequests.SPEND);
+    		request.setValue(value);
+    		request.setKey(receiverId);
+            request.setIdSet(coinIds);
+    		
+    		rep = serviceProxy.invokeOrdered(DTIMessage.toBytes(request));
+    	} catch (IOException e) {
+            logger.error("Failed to send SPEND request");
+            return -1;
+        }
+    	
+    	if (rep.length == 0) {
+            return -1;
+        }
+    	
+    	try {
+    		DTIMessage<K,V> response = DTIMessage.fromBytes(rep);
+    		return (int) response.getValue();
+    	} catch (ClassNotFoundException | IOException ex) {
+            logger.error("Failed to deserialized response of SPEND request");
+            return -1;
+        }
+    }
+
     @Override
     public int size() {
         byte[] rep;

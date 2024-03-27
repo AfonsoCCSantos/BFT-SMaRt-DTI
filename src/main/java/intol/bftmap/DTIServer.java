@@ -67,6 +67,37 @@ public class DTIServer<K, V> extends DefaultSingleRecoverable {
                     response.setValue(newCoinValue.getId());
                     counterCoins++;
                     return DTIMessage.toBytes(response);
+				
+				case SPEND:
+                	HashSet<Integer> coinIds = request.getIdSet();
+					int receiver = (int) request.getKey();
+					int value = (int) request.getValue();
+					int totalValue = 0;
+
+					for(int coinId : coinIds) {
+						Coin c = replicaMapCoins.remove(coinId); 
+						if(c != null) totalValue += c.getValue();
+					}
+
+                	if (totalValue < value) {
+                		response.setValue(-1);
+                		return DTIMessage.toBytes(response);
+                	}
+
+                	Coin coinToReceiver = new Coin(counterCoins, receiver, value);
+					replicaMapCoins.put(counterCoins, coinToReceiver);
+                    counterCoins++;
+
+					if(totalValue == value) {
+						response.setValue(0);
+                		return DTIMessage.toBytes(response);
+					}
+
+					Coin remainingValueCoin = new Coin(counterCoins, msgCtx.getSender(), totalValue - value);
+					replicaMapCoins.put(counterCoins, remainingValueCoin);
+					response.setValue(counterCoins);
+                    counterCoins++;
+                    return DTIMessage.toBytes(response);
                     
                 case MINT_NFT:
                 	double nftValue = (double) request.getValue();
