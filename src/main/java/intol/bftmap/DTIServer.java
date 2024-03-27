@@ -110,6 +110,18 @@ public class DTIServer<K, V> extends DefaultSingleRecoverable {
                         response.setCoinSet(userCoins);
                     }
                     return DTIMessage.toBytes(response);
+
+				case MY_NFTS:
+					HashSet<NFT> userNFTs = new HashSet<>();
+
+					for(NFT nft : replicaMapNFTs.values()) {
+						if(nft.getOwnerId() == msgCtx.getSender()) userNFTs.add(nft); 
+					}
+
+                    if (userNFTs != null) {
+                        response.setNftSet(userNFTs);
+                    }
+                    return DTIMessage.toBytes(response);
             }
         } catch (IOException | ClassNotFoundException ex) {
             logger.error("Failed to process unordered request", ex);

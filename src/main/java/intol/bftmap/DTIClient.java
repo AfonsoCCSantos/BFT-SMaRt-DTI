@@ -65,6 +65,20 @@ public class DTIClient {
 
             } else if (cmd.equalsIgnoreCase("MY_NFTS")) {
 
+                //invokes the op on the servers
+                HashSet<NFT> myNFTs = nftMap.getMyNFTs();
+
+                if (myNFTs == null) {
+                	System.out.println("\n The operation failed");
+                } 
+                else {
+                    System.out.println("\nYour NFTs:\n");
+                    for(NFT nft : myNFTs) {
+                        System.out.println("NFT " + nft.getId() + " with name " + nft.getName() + 
+                                ", with uri " + nft.getUri() + " and value " + nft.getValue() + " \n");
+                    }  
+                }
+
             } else if (cmd.equalsIgnoreCase("MINT_NFT")) {
 				String name = console.readLine("Enter an alpha-numeric name for the NFT: ");
                 

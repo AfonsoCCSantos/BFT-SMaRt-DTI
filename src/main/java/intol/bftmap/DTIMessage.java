@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.HashSet;
 
 import intol.bftmap.models.Coin;
+import intol.bftmap.models.NFT;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -18,6 +19,7 @@ public class DTIMessage<K,V> implements Serializable {
 	private String name;
 	private String uri;
     private HashSet<Coin> coinSet;
+    private HashSet<NFT> nftSet;
 	
 	public DTIMessage() {}
 	
@@ -87,6 +89,14 @@ public class DTIMessage<K,V> implements Serializable {
 
     public void setCoinSet(HashSet<Coin> coinSet) {
         this.coinSet = coinSet;
+    }
+
+    public HashSet<NFT> getNftSet() {
+        return nftSet;
+    }
+
+    public void setNftSet(HashSet<NFT> nftSet) {
+        this.nftSet = nftSet;
     }
 
 }
