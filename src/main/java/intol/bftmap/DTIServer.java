@@ -126,6 +126,19 @@ public class DTIServer<K, V> extends DefaultSingleRecoverable {
                     }
                     return DTIMessage.toBytes(response);
 
+				case SEARCH_NFT:
+					HashSet<NFT> resultNFTs = new HashSet<>();
+					String textToSearch = request.getName().toLowerCase();
+
+					for(NFT nft : replicaMapNFTs.values()) {
+						if(nft.getName().toLowerCase().contains(textToSearch)) resultNFTs.add(nft); 
+					}
+
+                    if (resultNFTs != null) {
+                        response.setNftSet(resultNFTs);
+                    }
+                    return DTIMessage.toBytes(response);
+
 				case MY_NFTS:
 					HashSet<NFT> userNFTs = new HashSet<>();
 

@@ -126,6 +126,23 @@ public class DTIClient {
                 	System.out.println("\nThe NFT with id " + id + " was changed.\n");		
                 }
 			} else if (cmd.equalsIgnoreCase("SEARCH_NFT")) {
+                String text = console.readLine("Enter an alpha-numeric name to be searched: ");
+
+                //invokes the op on the servers
+                HashSet<NFT> resultNFTs = nftMap.searchNFT(text);
+
+                if (resultNFTs == null) {
+                	System.out.println("\n The operation failed");
+                } 
+                else {
+                    System.out.println("\nResult NFTs:\n");
+                    for(NFT nft : resultNFTs) {
+                        System.out.println("NFT " + nft.getId() + " with name " + nft.getName() + 
+                                ", with uri " + nft.getUri() + " and value " + nft.getValue() + " \n");
+                    }  
+                }
+                
+
 
 
 			} else if (cmd.equalsIgnoreCase("BUY_NFT")) {

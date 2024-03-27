@@ -138,6 +138,32 @@ public class BFTMap<K, V> implements Map<K, V> {
             return null;
         }
     }
+
+    public HashSet<NFT> searchNFT(String text) {
+        byte[] rep;
+        try {
+            DTIMessage<K,V> request = new DTIMessage<>();
+            request.setType(DTIRequests.SEARCH_NFT);
+            request.setName(text);
+
+            //invokes BFT-SMaRt
+            rep = serviceProxy.invokeUnordered(DTIMessage.toBytes(request));
+        } catch (IOException e) {
+            logger.error("Failed to send SEARCH_NFT request");
+            return null;
+        }
+        if (rep.length == 0) {
+            return null;
+        }
+
+        try {
+    		DTIMessage<K,V> response = DTIMessage.fromBytes(rep);
+    		return (HashSet<NFT>) response.getNftSet();
+    	} catch (ClassNotFoundException | IOException ex) {
+            logger.error("Failed to deserialized response of SEARCH_NFT request");
+            return null;
+        }
+    }
     
     /**
      * Method created to be able to mint a new coin.
