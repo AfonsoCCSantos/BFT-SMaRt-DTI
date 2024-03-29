@@ -235,7 +235,8 @@ public class DTIServer<K, V> extends DefaultSingleRecoverable {
 	@Override
 	public byte[] getSnapshot() {
 		try (ByteArrayOutputStream bos = new ByteArrayOutputStream(); ObjectOutput out = new ObjectOutputStream(bos)) {
-            //out.writeObject(replicaMap);
+            out.writeObject(replicaMapCoins);
+            out.writeObject(replicaMapNFTs);
             out.flush();
             bos.flush();
             return bos.toByteArray();
@@ -245,10 +246,12 @@ public class DTIServer<K, V> extends DefaultSingleRecoverable {
         }
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void installSnapshot(byte[] state) {
 		try (ByteArrayInputStream bis = new ByteArrayInputStream(state); ObjectInput in = new ObjectInputStream(bis)) {
-			//replicaMap = (TreeMap<K, V>) in.readObject();
+			replicaMapCoins = (TreeMap<Integer, Coin>) in.readObject();
+			replicaMapNFTs = (TreeMap<Integer, 	NFT>) in.readObject();
         } catch (Exception ex) {
             ex.printStackTrace(); //debug instruction
         }
