@@ -20,6 +20,7 @@ public class DTIMessage<K,V> implements Serializable {
 	private String uri;
     private HashSet<Coin> coinSet;
     private HashSet<NFT> nftSet;
+    private HashSet<Integer> idSet;
 	
 	public DTIMessage() {}
 	
@@ -99,4 +100,11 @@ public class DTIMessage<K,V> implements Serializable {
         this.nftSet = nftSet;
     }
 
+    public HashSet<Integer> getIdSet() {
+        return idSet;
+    }
+
+    public void setIdSet(HashSet<Integer> idSet) {
+        this.idSet = idSet;
+    }
 }

@@ -61,6 +61,39 @@ public class DTIClient {
                 	System.out.println("\nThe coin with the value given was added to the map with id " + id + ".\n");		
                 }
             } else if (cmd.equalsIgnoreCase("SPEND")) {
+                HashSet<Integer> coinIds = new HashSet<>();
+                int receiverId;
+                double value;
+                try {
+                    while(true) {
+                        int id = Integer.parseInt(console.readLine("Please insert the id of a coin or -1 to stop listing: "));
+                        if(id == -1) break;   
+                        coinIds.add(id);
+                    } 
+                    receiverId = Integer.parseInt(console.readLine("Enter the receiver id: "));
+                } catch (NumberFormatException e) {
+                    System.out.println("\tThe value is supposed to be an integer!\n");
+                    continue;
+                }
+
+                try {
+                    value = Double.parseDouble(console.readLine("Enter the value to spend: "));
+                } catch (NumberFormatException e) {
+                    System.out.println("\tThe value is supposed to be a number!\n");
+                    continue;
+                }
+
+                //invokes the op on the servers
+                int id = coinMap.spendCoins(coinIds, receiverId, value);
+                if (id == -1) {
+                	System.out.println("\nThe operation failed");
+                }
+                else if(id == 0) {
+                    System.out.println("\nNo change.");
+                }
+                else {
+                	System.out.println("\nNew coin (change) created with id " + id + ".\n");
+                }
 
             } else if (cmd.equalsIgnoreCase("MY_NFTS")) {
 
@@ -106,7 +139,7 @@ public class DTIClient {
                 try {
                     nftId = Integer.parseInt(console.readLine("Enter the id of the NFT to be changed: "));
                 } catch (NumberFormatException e) {
-                    System.out.println("\tThe value is supposed to be a integer!\n");
+                    System.out.println("\tThe value is supposed to be an integer!\n");
                     continue;
                 }
 
@@ -141,15 +174,36 @@ public class DTIClient {
                                 ", with uri " + nft.getUri() + " and value " + nft.getValue() + " \n");
                     }  
                 }
-                
-
-
-
 			} else if (cmd.equalsIgnoreCase("BUY_NFT")) {
+                HashSet<Integer> coinIds = new HashSet<>();
+                int nftId;
+                try {
+                    while (true) {
+                        int id = Integer.parseInt(console.readLine("Please insert the id of a coin or -1 to stop listing: "));
+                        if (id == -1) break;   
+                        coinIds.add(id);
+                    } 
+                    nftId = Integer.parseInt(console.readLine("Enter the nft id: "));
+                } catch (NumberFormatException e) {
+                    System.out.println("\tThe value is supposed to be an integer!\n");
+                    continue;
+                }
 
-
+                //invokes the op on the servers
+                int id = coinMap.buyNFT(coinIds, nftId);
+                if (id == -1) {
+                	System.out.println("\nThe operation failed");
+                }
+                else if (id == 0) {
+                    System.out.println("\nNo change.");
+                }
+                else {
+                	System.out.println("\nNew coin (change) created with id " + id + ".\n");
+                }
 
             } else if (cmd.equalsIgnoreCase("EXIT")) {
+                System.out.println("\tShutting down...\n");
+                System.exit(0);
 
             } else {
                 System.out.println("\tInvalid command :P\n");

@@ -32,8 +32,8 @@ public class DTIServer<K, V> extends DefaultSingleRecoverable {
 	public DTIServer(int id) {
 		replicaMapCoins = new TreeMap<>();
 		replicaMapCoins = new TreeMap<>();
-		counterCoins = 0;
-		counterNFTs = 0;
+		counterCoins = 1;
+		counterNFTs = 1;
 		
 		new ServiceReplica(id, this, this);
 	}
@@ -67,6 +67,41 @@ public class DTIServer<K, V> extends DefaultSingleRecoverable {
                     response.setValue(newCoinValue.getId());
                     counterCoins++;
                     return DTIMessage.toBytes(response);
+				
+				case SPEND:
+                	HashSet<Integer> coinIds = request.getIdSet();
+					int receiver = (int) request.getKey();
+					double value = (double) request.getValue();
+					double valueOfUserCoins = 0;
+
+					for (int coinId : coinIds) {
+						Coin c = replicaMapCoins.get(coinId); 
+						if(c != null) valueOfUserCoins += c.getValue();
+					}
+
+                	if (valueOfUserCoins < value) {
+                		response.setValue(-1);
+                		return DTIMessage.toBytes(response);
+                	}
+
+					for (int coinId : coinIds) {
+						replicaMapCoins.remove(coinId); 
+					}
+
+                	Coin coinToReceiver = new Coin(counterCoins, receiver, value);
+					replicaMapCoins.put(counterCoins, coinToReceiver);
+                    counterCoins++;
+
+					if (valueOfUserCoins == value) {
+						response.setValue(0);
+                		return DTIMessage.toBytes(response);
+					}
+
+					Coin remainingValueCoin = new Coin(counterCoins, msgCtx.getSender(), valueOfUserCoins - value);
+					replicaMapCoins.put(counterCoins, remainingValueCoin);
+					response.setValue(counterCoins);
+                    counterCoins++;
+                    return DTIMessage.toBytes(response);
                     
                 case MINT_NFT:
                 	double nftValue = (double) request.getValue();
@@ -95,6 +130,41 @@ public class DTIServer<K, V> extends DefaultSingleRecoverable {
 
                 	response.setValue(nft.getId());
                 	return DTIMessage.toBytes(response);
+				case BUY_NFT:
+                	coinIds = request.getIdSet();
+					NFT nftToBuy = replicaMapNFTs.get((int) request.getValue());  
+					valueOfUserCoins = 0;
+
+					for (int coinId : coinIds) {
+						Coin c = replicaMapCoins.get(coinId); 
+						if(c != null) valueOfUserCoins += c.getValue();
+					}
+
+                	if (valueOfUserCoins < nftToBuy.getValue()) {
+                		response.setValue(-1);
+                		return DTIMessage.toBytes(response);
+                	}
+
+					for (int coinId : coinIds) {
+						replicaMapCoins.remove(coinId); 
+					}
+
+                	Coin coinToNFTOwner = new Coin(counterCoins, nftToBuy.getOwnerId(), nftToBuy.getValue());
+					replicaMapCoins.put(counterCoins, coinToNFTOwner);
+                    counterCoins++;
+
+					nftToBuy.setOwnerId(msgCtx.getSender());
+
+					if (valueOfUserCoins == nftToBuy.getValue()) {
+						response.setValue(0);
+                		return DTIMessage.toBytes(response);
+					}
+
+					remainingValueCoin = new Coin(counterCoins, msgCtx.getSender(), valueOfUserCoins - nftToBuy.getValue());
+					replicaMapCoins.put(counterCoins, remainingValueCoin);
+					response.setValue(counterCoins);
+                    counterCoins++;
+                    return DTIMessage.toBytes(response);
             }
 
             return null;
