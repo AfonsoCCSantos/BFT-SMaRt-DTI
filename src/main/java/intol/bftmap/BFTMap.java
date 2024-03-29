@@ -252,7 +252,7 @@ public class BFTMap<K, V> implements Map<K, V> {
         }
     }
 
-    public int spendCoins(HashSet<Integer> coinIds, int receiverId, int value) {
+    public int spendCoins(HashSet<Integer> coinIds, int receiverId, double value) {
     	byte[] rep;
     	try {
     		DTIMessage<K,V> request = new DTIMessage<>();
