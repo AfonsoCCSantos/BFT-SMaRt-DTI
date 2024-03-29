@@ -1,6 +1,13 @@
 package intol.bftmap.models;
 
-public class NFT {
+import java.io.Serializable;
+
+public class NFT implements Serializable {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	
 	private int id;
 	private int ownerId;

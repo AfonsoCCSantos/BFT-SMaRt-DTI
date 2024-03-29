@@ -58,13 +58,13 @@ public class DTIServer<K, V> extends DefaultSingleRecoverable {
             switch (cmd) {
                 case MINT:
                 	double coinValue = (double) request.getValue();
-                	if (!(msgCtx.getSender() != AUTHORIZED_CLIENT_TO_MINT) || coinValue <= 0) {
+                	if (msgCtx.getSender() != AUTHORIZED_CLIENT_TO_MINT || coinValue <= 0) {
                 		response.setValue(-1);
                 		return DTIMessage.toBytes(response);
                 	}
                 	Coin coin = new Coin(counterCoins, msgCtx.getSender() , coinValue);
-                	Coin newCoinValue = replicaMapCoins.put(counterCoins, coin);
-                    response.setValue(newCoinValue.getId());
+                	replicaMapCoins.put(counterCoins, coin);
+                    response.setValue(counterCoins);
                     counterCoins++;
                     return DTIMessage.toBytes(response);
 				
@@ -111,8 +111,8 @@ public class DTIServer<K, V> extends DefaultSingleRecoverable {
                 	}
                 	
                 	NFT nft = new NFT(counterNFTs, msgCtx.getSender() , request.getName() , request.getUri() , nftValue);
-                	NFT newNFTValue = replicaMapNFTs.put(counterNFTs, nft);
-                	response.setValue(newNFTValue.getId());
+                	replicaMapNFTs.put(counterNFTs, nft);
+                	response.setValue(counterNFTs);
                 	counterNFTs++;
                 	return DTIMessage.toBytes(response);
 				case SET_NFT_PRICE:
