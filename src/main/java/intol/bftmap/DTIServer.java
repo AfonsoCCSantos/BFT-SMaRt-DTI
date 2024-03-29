@@ -117,8 +117,9 @@ public class DTIServer<K, V> extends DefaultSingleRecoverable {
                 case MY_COINS:
 					HashSet<Coin> userCoins = new HashSet<>();
 
-					for(Coin c : replicaMapCoins.values()) {
-						if(c.getOwnerId() == msgCtx.getSender()) userCoins.add(c); 
+					for (Coin c : replicaMapCoins.values()) {
+						if(c.getOwnerId() == msgCtx.getSender()) 
+							userCoins.add(c); 
 					}
 
                     if (userCoins != null) {
@@ -130,8 +131,9 @@ public class DTIServer<K, V> extends DefaultSingleRecoverable {
 					HashSet<NFT> resultNFTs = new HashSet<>();
 					String textToSearch = request.getName().toLowerCase();
 
-					for(NFT nft : replicaMapNFTs.values()) {
-						if(nft.getName().toLowerCase().contains(textToSearch)) resultNFTs.add(nft); 
+					for (NFT nft : replicaMapNFTs.values()) {
+						if (nft.getName().toLowerCase().contains(textToSearch)) 
+							resultNFTs.add(nft); 
 					}
 
                     if (resultNFTs != null) {
@@ -142,8 +144,9 @@ public class DTIServer<K, V> extends DefaultSingleRecoverable {
 				case MY_NFTS:
 					HashSet<NFT> userNFTs = new HashSet<>();
 
-					for(NFT nft : replicaMapNFTs.values()) {
-						if(nft.getOwnerId() == msgCtx.getSender()) userNFTs.add(nft); 
+					for (NFT nft : replicaMapNFTs.values()) {
+						if (nft.getOwnerId() == msgCtx.getSender()) 
+							userNFTs.add(nft); 
 					}
 
                     if (userNFTs != null) {
