@@ -14,6 +14,11 @@ import java.io.IOException;
 
 public class DTIMessage<K,V> implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	private DTIRequests type;
 	private V value;
 	private K key;

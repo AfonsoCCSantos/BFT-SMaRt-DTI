@@ -209,12 +209,13 @@ public class BFTMap<K, V> implements Map<K, V> {
     		request.setUri(uri);
     		
     		rep = serviceProxy.invokeOrdered(DTIMessage.toBytes(request));
+    		System.out.println("Recebi resposta do DTIServer");
     	} catch (IOException e) {
             logger.error("Failed to send MINT_NFT request");
             return -1;
         }
     	
-    	if (rep.length == 0) {
+    	if (rep == null || rep.length == 0) {
             return -1;
         }
     	

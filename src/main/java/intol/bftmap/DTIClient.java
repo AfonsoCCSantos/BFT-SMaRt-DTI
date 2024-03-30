@@ -131,7 +131,7 @@ public class DTIClient {
                 String uri= console.readLine("Enter the NFT uri: ");
                 double value;
                 try {
-                    value = Integer.parseInt(console.readLine("Enter a the value of the NFT: "));
+                    value = Double.parseDouble(console.readLine("Enter a the value of the NFT: "));
                 } catch (NumberFormatException e) {
                     System.out.println("\tThe value is supposed to be a number!\n");
                     continue;
