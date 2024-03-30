@@ -7,8 +7,9 @@ import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.TreeMap;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,13 +26,12 @@ public class DTIServer<K, V> extends DefaultSingleRecoverable {
 	private final Logger logger = LoggerFactory.getLogger("bftsmart");
 	private TreeMap<Integer, Coin> replicaMapCoins;
 	private TreeMap<Integer, NFT> replicaMapNFTs;
-	private int counterCoins;
-	private int counterNFTs;
-	
+	private Integer counterCoins;
+	private Integer counterNFTs;
 	
 	public DTIServer(int id) {
 		replicaMapCoins = new TreeMap<>();
-		replicaMapCoins = new TreeMap<>();
+		replicaMapNFTs = new TreeMap<>();
 		counterCoins = 1;
 		counterNFTs = 1;
 		
@@ -69,7 +69,7 @@ public class DTIServer<K, V> extends DefaultSingleRecoverable {
                     return DTIMessage.toBytes(response);
 				
 				case SPEND:
-                	HashSet<Integer> coinIds = request.getIdSet();
+                	List<Integer> coinIds = request.getIdList();
 					int receiver = (int) request.getKey();
 					double value = (double) request.getValue();
 					double valueOfUserCoins = 0;
@@ -105,10 +105,6 @@ public class DTIServer<K, V> extends DefaultSingleRecoverable {
                     
                 case MINT_NFT:
                 	double nftValue = (double) request.getValue();
-                	if (!(msgCtx.getSender() != AUTHORIZED_CLIENT_TO_MINT || nftValue <= 0)) {
-                		response.setValue(-1);
-                		return DTIMessage.toBytes(response);
-                	}
                 	
                 	NFT nft = new NFT(counterNFTs, msgCtx.getSender() , request.getName() , request.getUri() , nftValue);
                 	replicaMapNFTs.put(counterNFTs, nft);
@@ -131,7 +127,7 @@ public class DTIServer<K, V> extends DefaultSingleRecoverable {
                 	response.setValue(nft.getId());
                 	return DTIMessage.toBytes(response);
 				case BUY_NFT:
-                	coinIds = request.getIdSet();
+                	coinIds = request.getIdList();
 					NFT nftToBuy = replicaMapNFTs.get((int) request.getValue());  
 					valueOfUserCoins = 0;
 
@@ -165,6 +161,22 @@ public class DTIServer<K, V> extends DefaultSingleRecoverable {
 					response.setValue(counterCoins);
                     counterCoins++;
                     return DTIMessage.toBytes(response);
+				case MY_COINS:
+					List<Coin> userCoins = new ArrayList<>();
+
+					for (Coin c : replicaMapCoins.values()) {
+						if (c.getOwnerId() == msgCtx.getSender()) 
+							userCoins.add(c); 
+					}
+					
+					for (Coin c : userCoins) {
+						System.out.println("Coin id: " + c.getId() + " Coin owner: " + c.getOwnerId());
+					}
+
+                    if (userCoins != null) {
+                        response.setCoinList(userCoins);
+                    }
+                    return DTIMessage.toBytes(response);
             }
 
             return null;
@@ -185,20 +197,24 @@ public class DTIServer<K, V> extends DefaultSingleRecoverable {
 
             switch (cmd) {
                 case MY_COINS:
-					HashSet<Coin> userCoins = new HashSet<>();
+					List<Coin> userCoins = new ArrayList<>();
 
 					for (Coin c : replicaMapCoins.values()) {
-						if(c.getOwnerId() == msgCtx.getSender()) 
+						if (c.getOwnerId() == msgCtx.getSender()) 
 							userCoins.add(c); 
+					}
+					
+					for (Coin c : userCoins) {
+						System.out.println("Coin id: " + c.getId() + " Coin owner: " + c.getOwnerId());
 					}
 
                     if (userCoins != null) {
-                        response.setCoinSet(userCoins);
+                        response.setCoinList(userCoins);
                     }
                     return DTIMessage.toBytes(response);
 
 				case SEARCH_NFT:
-					HashSet<NFT> resultNFTs = new HashSet<>();
+					List<NFT> resultNFTs = new ArrayList<>();
 					String textToSearch = request.getName().toLowerCase();
 
 					for (NFT nft : replicaMapNFTs.values()) {
@@ -207,12 +223,12 @@ public class DTIServer<K, V> extends DefaultSingleRecoverable {
 					}
 
                     if (resultNFTs != null) {
-                        response.setNftSet(resultNFTs);
+                        response.setNftList(resultNFTs);
                     }
                     return DTIMessage.toBytes(response);
 
 				case MY_NFTS:
-					HashSet<NFT> userNFTs = new HashSet<>();
+					List<NFT> userNFTs = new ArrayList<>();
 
 					for (NFT nft : replicaMapNFTs.values()) {
 						if (nft.getOwnerId() == msgCtx.getSender()) 
@@ -220,7 +236,7 @@ public class DTIServer<K, V> extends DefaultSingleRecoverable {
 					}
 
                     if (userNFTs != null) {
-                        response.setNftSet(userNFTs);
+                        response.setNftList(userNFTs);
                     }
                     return DTIMessage.toBytes(response);
             }
@@ -237,6 +253,8 @@ public class DTIServer<K, V> extends DefaultSingleRecoverable {
 		try (ByteArrayOutputStream bos = new ByteArrayOutputStream(); ObjectOutput out = new ObjectOutputStream(bos)) {
             out.writeObject(replicaMapCoins);
             out.writeObject(replicaMapNFTs);
+            out.writeObject(counterCoins);
+            out.writeObject(counterNFTs);
             out.flush();
             bos.flush();
             return bos.toByteArray();
@@ -252,6 +270,8 @@ public class DTIServer<K, V> extends DefaultSingleRecoverable {
 		try (ByteArrayInputStream bis = new ByteArrayInputStream(state); ObjectInput in = new ObjectInputStream(bis)) {
 			replicaMapCoins = (TreeMap<Integer, Coin>) in.readObject();
 			replicaMapNFTs = (TreeMap<Integer, 	NFT>) in.readObject();
+			counterCoins = (Integer) in.readObject();
+			counterNFTs = (Integer) in.readObject();
         } catch (Exception ex) {
             ex.printStackTrace(); //debug instruction
         }

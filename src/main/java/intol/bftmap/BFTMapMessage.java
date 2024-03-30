@@ -10,7 +10,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class BFTMapMessage<K,V> implements Serializable {
-    private BFTMapRequestType type;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private BFTMapRequestType type;
     private K key;
     private V value;
     private HashSet<K> keySet;

@@ -1,7 +1,7 @@
 package intol.bftmap;
 
 import java.io.Serializable;
-import java.util.HashSet;
+import java.util.List;
 
 import intol.bftmap.models.Coin;
 import intol.bftmap.models.NFT;
@@ -13,14 +13,15 @@ import java.io.ObjectOutputStream;
 import java.io.IOException;
 
 public class DTIMessage<K,V> implements Serializable {
+	
 	private DTIRequests type;
 	private V value;
 	private K key;
 	private String name;
 	private String uri;
-    private HashSet<Coin> coinSet;
-    private HashSet<NFT> nftSet;
-    private HashSet<Integer> idSet;
+    private List<Coin> coinList;
+    private List<NFT> nftList;
+    private List<Integer> idList;
 	
 	public DTIMessage() {}
 	
@@ -84,27 +85,27 @@ public class DTIMessage<K,V> implements Serializable {
         this.uri = uri;
     }
 
-    public HashSet<Coin> getCoinSet() {
-        return coinSet;
+    public List<Coin> getCoinList() {
+        return coinList;
     }
 
-    public void setCoinSet(HashSet<Coin> coinSet) {
-        this.coinSet = coinSet;
+    public void setCoinList(List<Coin> coinList) {
+        this.coinList = coinList;
     }
 
-    public HashSet<NFT> getNftSet() {
-        return nftSet;
+    public List<NFT> getNftList() {
+        return nftList;
     }
 
-    public void setNftSet(HashSet<NFT> nftSet) {
-        this.nftSet = nftSet;
+    public void setNftList(List<NFT> nftList) {
+        this.nftList = nftList;
     }
 
-    public HashSet<Integer> getIdSet() {
-        return idSet;
+    public List<Integer> getIdList() {
+        return idList;
     }
 
-    public void setIdSet(HashSet<Integer> idSet) {
-        this.idSet = idSet;
+    public void setIdList(List<Integer> idList) {
+        this.idList = idList;
     }
 }

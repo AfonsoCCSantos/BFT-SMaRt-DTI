@@ -1,6 +1,7 @@
 package intol.bftmap.models;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Coin implements Serializable {
 	
@@ -49,4 +50,16 @@ public class Coin implements Serializable {
 		this.value = value;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Coin other = (Coin) obj;
+		return id == other.id && ownerId == other.ownerId
+				&& Double.doubleToLongBits(value) == Double.doubleToLongBits(other.value);
+	}
 }

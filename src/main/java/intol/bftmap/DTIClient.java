@@ -4,6 +4,10 @@ import intol.bftmap.models.Coin;
 import intol.bftmap.models.NFT;
 import java.io.Console;
 import java.util.HashSet;
+import java.util.List;
+import java.util.ArrayList;
+
+
 
 public class DTIClient {
 	
@@ -30,14 +34,15 @@ public class DTIClient {
 
             if (cmd.equalsIgnoreCase("MY_COINS")) {
                 //invokes the op on the servers
-                HashSet<Coin>  myCoins = coinMap.getMyCoins();
-
+            	System.out.println("entrei no my coins");
+                List<Coin>  myCoins = coinMap.getMyCoins();
+                System.out.println("recebi set do server");
                 if (myCoins == null) {
                 	System.out.println("\n The operation failed");
                 } 
                 else {
 					if (myCoins.isEmpty()) {
-						System.out.println("\nYou dont have any coins.'\n");
+						System.out.println("\nYou dont have any coins.\n");
 					}
 					else {
 						System.out.println("\nYour coins:\n");
@@ -67,7 +72,7 @@ public class DTIClient {
                 	System.out.println("\nThe coin with the value given was added to the map with id " + id + ".\n");		
                 }
             } else if (cmd.equalsIgnoreCase("SPEND")) {
-                HashSet<Integer> coinIds = new HashSet<>();
+                List<Integer> coinIds = new ArrayList<>();
                 int receiverId;
                 double value;
                 try {
@@ -104,14 +109,14 @@ public class DTIClient {
             } else if (cmd.equalsIgnoreCase("MY_NFTS")) {
 
                 //invokes the op on the servers
-                HashSet<NFT> myNFTs = nftMap.getMyNFTs();
+                List<NFT> myNFTs = nftMap.getMyNFTs();
 
                 if (myNFTs == null) {
                 	System.out.println("\n The operation failed");
                 } 
                 else {
 					if (myNFTs.isEmpty()) {
-						System.out.println("\nYou dont have any NFTs.'\n");
+						System.out.println("\nYou dont have any NFTs.\n");
 					}
 					else {
 						System.out.println("\nYour NFTs:\n");
@@ -173,7 +178,7 @@ public class DTIClient {
                 String text = console.readLine("Enter an alpha-numeric name to be searched: ");
 
                 //invokes the op on the servers
-                HashSet<NFT> resultNFTs = nftMap.searchNFT(text);
+                List<NFT> resultNFTs = nftMap.searchNFT(text);
 
                 if (resultNFTs == null) {
                 	System.out.println("\n The operation failed");
@@ -186,7 +191,7 @@ public class DTIClient {
                     }  
                 }
 			} else if (cmd.equalsIgnoreCase("BUY_NFT")) {
-                HashSet<Integer> coinIds = new HashSet<>();
+                List<Integer> coinIds = new ArrayList<>();
                 int nftId;
                 try {
                     while (true) {

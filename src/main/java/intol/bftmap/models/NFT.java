@@ -1,6 +1,7 @@
 package intol.bftmap.models;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class NFT implements Serializable {
 	
@@ -64,4 +65,17 @@ public class NFT implements Serializable {
 		this.value = value;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		NFT other = (NFT) obj;
+		return id == other.id && Objects.equals(name, other.name) && ownerId == other.ownerId
+				&& Objects.equals(uri, other.uri)
+				&& Double.doubleToLongBits(value) == Double.doubleToLongBits(other.value);
+	}
 }

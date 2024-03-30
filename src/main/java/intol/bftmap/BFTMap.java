@@ -6,11 +6,12 @@ package intol.bftmap;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import intol.bftmap.models.Coin;
 import intol.bftmap.models.NFT;
+import java.util.List;
+
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -89,7 +90,7 @@ public class BFTMap<K, V> implements Map<K, V> {
         }
     }
 
-    public HashSet<Coin> getMyCoins() {
+    public List<Coin> getMyCoins() {
         byte[] rep;
         try {
             DTIMessage<K,V> request = new DTIMessage<>();
@@ -97,30 +98,32 @@ public class BFTMap<K, V> implements Map<K, V> {
 
             //invokes BFT-SMaRt
             rep = serviceProxy.invokeUnordered(DTIMessage.toBytes(request));
-        } catch (IOException e) {
+        } catch (Exception e) {
+        	e.printStackTrace();
             logger.error("Failed to send MY_COINS request");
             return null;
         }
-        if (rep.length == 0) {
+        if (rep == null || rep.length == 0) {
+        	logger.error("Failed to send MY_COINS request");
             return null;
         }
 
         try {
     		DTIMessage<K,V> response = DTIMessage.fromBytes(rep);
-    		return (HashSet<Coin>) response.getCoinSet();
+    		return (List<Coin>) response.getCoinList();
     	} catch (ClassNotFoundException | IOException ex) {
             logger.error("Failed to deserialized response of MY_COINS request");
             return null;
         }
     }
 
-    public HashSet<NFT> getMyNFTs() {
+    public List<NFT> getMyNFTs() {
         byte[] rep;
         try {
             DTIMessage<K,V> request = new DTIMessage<>();
             request.setType(DTIRequests.MY_NFTS);
 
-            //invokes BFT-SMaRt
+            //inWvokes BFT-SMaRt
             rep = serviceProxy.invokeUnordered(DTIMessage.toBytes(request));
         } catch (IOException e) {
             logger.error("Failed to send MY_NFTs request");
@@ -132,14 +135,14 @@ public class BFTMap<K, V> implements Map<K, V> {
 
         try {
     		DTIMessage<K,V> response = DTIMessage.fromBytes(rep);
-    		return (HashSet<NFT>) response.getNftSet();
+    		return (List<NFT>) response.getNftList();
     	} catch (ClassNotFoundException | IOException ex) {
             logger.error("Failed to deserialized response of MY_NFTs request");
             return null;
         }
     }
 
-    public HashSet<NFT> searchNFT(String text) {
+    public List<NFT> searchNFT(String text) {
         byte[] rep;
         try {
             DTIMessage<K,V> request = new DTIMessage<>();
@@ -158,7 +161,7 @@ public class BFTMap<K, V> implements Map<K, V> {
 
         try {
     		DTIMessage<K,V> response = DTIMessage.fromBytes(rep);
-    		return (HashSet<NFT>) response.getNftSet();
+    		return (List<NFT>) response.getNftList();
     	} catch (ClassNotFoundException | IOException ex) {
             logger.error("Failed to deserialized response of SEARCH_NFT request");
             return null;
@@ -252,14 +255,14 @@ public class BFTMap<K, V> implements Map<K, V> {
         }
     }
 
-    public int spendCoins(HashSet<Integer> coinIds, int receiverId, double value) {
+    public int spendCoins(List<Integer> coinIds, int receiverId, double value) {
     	byte[] rep;
     	try {
     		DTIMessage<K,V> request = new DTIMessage<>();
     		request.setType(DTIRequests.SPEND);
     		request.setValue(value);
     		request.setKey(receiverId);
-            request.setIdSet(coinIds);
+            request.setIdList(coinIds);
     		
     		rep = serviceProxy.invokeOrdered(DTIMessage.toBytes(request));
     	} catch (IOException e) {
@@ -280,13 +283,13 @@ public class BFTMap<K, V> implements Map<K, V> {
         }
     }
 
-    public int buyNFT(HashSet<Integer> coinIds, int nftId) {
+    public int buyNFT(List<Integer> coinIds, int nftId) {
     	byte[] rep;
     	try {
     		DTIMessage<K,V> request = new DTIMessage<>();
     		request.setType(DTIRequests.BUY_NFT);
     		request.setValue(nftId);
-            request.setIdSet(coinIds);
+            request.setIdList(coinIds);
     		
     		rep = serviceProxy.invokeOrdered(DTIMessage.toBytes(request));
     	} catch (IOException e) {
