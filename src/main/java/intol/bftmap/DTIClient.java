@@ -34,9 +34,7 @@ public class DTIClient {
 
             if (cmd.equalsIgnoreCase("MY_COINS")) {
                 //invokes the op on the servers
-            	System.out.println("entrei no my coins");
                 List<Coin>  myCoins = coinMap.getMyCoins();
-                System.out.println("recebi set do server");
                 if (myCoins == null) {
                 	System.out.println("\n The operation failed");
                 } 

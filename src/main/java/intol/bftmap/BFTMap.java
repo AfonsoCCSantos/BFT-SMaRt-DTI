@@ -99,7 +99,6 @@ public class BFTMap<K, V> implements Map<K, V> {
             //invokes BFT-SMaRt
             rep = serviceProxy.invokeUnordered(DTIMessage.toBytes(request));
         } catch (Exception e) {
-        	e.printStackTrace();
             logger.error("Failed to send MY_COINS request");
             return null;
         }
