@@ -13,8 +13,7 @@ public class DTIClient {
 	
 	public static void main(String[] args) {
 		int clientId = (args.length > 0) ? Integer.parseInt(args[0]) : 1001;
-		BFTMap<Integer, Coin> coinMap = new BFTMap<>(clientId);
-		BFTMap<Integer, NFT> nftMap = new BFTMap<>(clientId);
+		BFTMap map = new BFTMap(clientId);
 		
 		Console console = System.console();
 		
@@ -34,7 +33,7 @@ public class DTIClient {
 
             if (cmd.equalsIgnoreCase("MY_COINS")) {
                 //invokes the op on the servers
-                List<Coin>  myCoins = coinMap.getMyCoins();
+                List<Coin>  myCoins = map.getMyCoins();
                 if (myCoins == null) {
                 	System.out.println("\n The operation failed");
                 } 
@@ -62,7 +61,7 @@ public class DTIClient {
                 }
               
                 //invokes the op on the servers
-                int id = coinMap.mintCoin(value);
+                int id = map.mintCoin(value);
                 if (id == -1) {
                 	System.out.println("\n The operation failed");
                 }
@@ -93,7 +92,7 @@ public class DTIClient {
                 }
 
                 //invokes the op on the servers
-                int id = coinMap.spendCoins(coinIds, receiverId, value);
+                int id = map.spendCoins(coinIds, receiverId, value);
                 if (id == -1) {
                 	System.out.println("\nThe operation failed");
                 }
@@ -107,7 +106,8 @@ public class DTIClient {
             } else if (cmd.equalsIgnoreCase("MY_NFTS")) {
 
                 //invokes the op on the servers
-                List<NFT> myNFTs = nftMap.getMyNFTs();
+            	System.out.println("Vou iniciar o getMyNfts");
+                List<NFT> myNFTs = map.getMyNFTs();
 
                 if (myNFTs == null) {
                 	System.out.println("\n The operation failed");
@@ -138,7 +138,7 @@ public class DTIClient {
                 }
                 
                 //invokes the op on the servers
-                int id = nftMap.mintNFT(name, uri, value);
+                int id = map.mintNFT(name, uri, value);
                 
                 if(id == -1) {
 					System.out.println("\n The operation failed.\n");
@@ -165,7 +165,7 @@ public class DTIClient {
                 }
                 
                 // invokes the op on the servers
-                int id = nftMap.setNFTPrice(nftId, newValue);
+                int id = map.setNFTPrice(nftId, newValue);
                 if (id == -1) {
                 	System.out.println("\n The operation failed");
                 }
@@ -176,7 +176,7 @@ public class DTIClient {
                 String text = console.readLine("Enter an alpha-numeric name to be searched: ");
 
                 //invokes the op on the servers
-                List<NFT> resultNFTs = nftMap.searchNFT(text);
+                List<NFT> resultNFTs = map.searchNFT(text);
 
                 if (resultNFTs == null) {
                 	System.out.println("\n The operation failed");
@@ -204,7 +204,7 @@ public class DTIClient {
                 }
 
                 //invokes the op on the servers
-                int id = coinMap.buyNFT(coinIds, nftId);
+                int id = map.buyNFT(coinIds, nftId);
                 if (id == -1) {
                 	System.out.println("\nThe operation failed");
                 }

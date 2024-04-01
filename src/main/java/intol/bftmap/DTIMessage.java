@@ -12,7 +12,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.IOException;
 
-public class DTIMessage<K,V> implements Serializable {
+public class DTIMessage implements Serializable {
 	
 	/**
 	 * 
@@ -20,8 +20,10 @@ public class DTIMessage<K,V> implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private DTIRequests type;
-	private V value;
-	private K key;
+	private Coin coin;
+	private NFT nft;
+	private int key;
+	private double value;
 	private String name;
 	private String uri;
     private List<Coin> coinList;
@@ -30,7 +32,7 @@ public class DTIMessage<K,V> implements Serializable {
 	
 	public DTIMessage() {}
 	
-	public static <K,V> byte[] toBytes(DTIMessage<K,V> message) throws IOException {
+	public static byte[] toBytes(DTIMessage message) throws IOException {
         ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
         ObjectOutputStream objOut = new ObjectOutputStream(byteOut);
         objOut.writeObject(message);
@@ -41,20 +43,10 @@ public class DTIMessage<K,V> implements Serializable {
         return byteOut.toByteArray();
     } 
     
-    @SuppressWarnings("unchecked")
-    public static <K,V> DTIMessage<K,V> fromBytes(byte[] rep) throws IOException, ClassNotFoundException {
+    public static DTIMessage fromBytes(byte[] rep) throws IOException, ClassNotFoundException {
         ByteArrayInputStream byteIn = new ByteArrayInputStream(rep);
         ObjectInputStream objIn = new ObjectInputStream(byteIn);
-        return (DTIMessage<K,V>) objIn.readObject();
-    }
-    
-    public V getValue() {
-        return value;
-    }
-
-    @SuppressWarnings("unchecked")
-    public void setValue(Object value) {
-        this.value = (V)value;
+        return (DTIMessage) objIn.readObject();
     }
     
     public void setType(DTIRequests type) {
@@ -63,15 +55,6 @@ public class DTIMessage<K,V> implements Serializable {
     
     public DTIRequests getType() {
         return type;
-    }
-    
-    public K getKey() {
-        return key;
-    }
-
-    @SuppressWarnings("unchecked")
-    public void setKey(Object key) {
-        this.key = (K)key;
     }
     
     public String getName() {
@@ -113,4 +96,36 @@ public class DTIMessage<K,V> implements Serializable {
     public void setIdList(List<Integer> idList) {
         this.idList = idList;
     }
+
+	public Coin getCoin() {
+		return coin;
+	}
+
+	public void setCoin(Coin coin) {
+		this.coin = coin;
+	}
+	
+	public double getValue() {
+		return value;
+	}
+
+	public void setValue(double value) {
+		this.value = value;
+	}
+
+	public NFT getNft() {
+		return nft;
+	}
+
+	public void setNft(NFT nft) {
+		this.nft = nft;
+	}
+
+	public int getKey() {
+		return key;
+	}
+
+	public void setKey(int key) {
+		this.key = key;
+	}
 }

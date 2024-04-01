@@ -49,8 +49,8 @@ public class DTIServer<K, V> extends DefaultSingleRecoverable {
 	@Override
 	public byte[] appExecuteOrdered(byte[] command, MessageContext msgCtx) {
 		try {
-            DTIMessage<K,V> response = new DTIMessage<>();
-            DTIMessage<K,V> request = DTIMessage.fromBytes(command);
+            DTIMessage response = new DTIMessage();
+            DTIMessage request = DTIMessage.fromBytes(command);
             DTIRequests cmd = request.getType();
             
             logger.info("Ordered execution of a {} request from {}", cmd, msgCtx.getSender());
@@ -182,6 +182,25 @@ public class DTIServer<K, V> extends DefaultSingleRecoverable {
                         response.setCoinList(userCoins);
                     }
                     return DTIMessage.toBytes(response);
+				case MY_NFTS:
+					System.out.println("Recebi o myNFTs");
+					List<NFT> userNFTs = new ArrayList<>();
+
+					for (NFT nft2 : replicaMapNFTs.values()) {
+						if (nft2.getOwnerId() == msgCtx.getSender()) 
+							userNFTs.add(nft2); 
+					}
+					
+                    if (userNFTs != null) {
+                        response.setNftList(userNFTs);
+                    }
+                    System.out.println("Acabei de fazer tudo e vou agora colocar a resposta em bytes");
+                    byte[] res = DTIMessage.toBytes(response);
+                    System.out.println("Consegui meter a resposta em bytes");
+                    
+                    
+                    
+                    return DTIMessage.toBytes(response);
             }
 
             return null;
@@ -194,8 +213,8 @@ public class DTIServer<K, V> extends DefaultSingleRecoverable {
 	@Override
 	public byte[] appExecuteUnordered(byte[] command, MessageContext msgCtx) {
 		try {
-            DTIMessage<K,V> response = new DTIMessage<>();
-            DTIMessage<K,V> request = DTIMessage.fromBytes(command);
+            DTIMessage response = new DTIMessage();
+            DTIMessage request = DTIMessage.fromBytes(command);
             DTIRequests cmd = request.getType();
 
             logger.info("Unordered execution of a {} request from {}", cmd, msgCtx.getSender());
@@ -233,16 +252,23 @@ public class DTIServer<K, V> extends DefaultSingleRecoverable {
                     return DTIMessage.toBytes(response);
 
 				case MY_NFTS:
+					System.out.println("Recebi o myNFTs");
 					List<NFT> userNFTs = new ArrayList<>();
 
 					for (NFT nft : replicaMapNFTs.values()) {
 						if (nft.getOwnerId() == msgCtx.getSender()) 
 							userNFTs.add(nft); 
 					}
-
+					
                     if (userNFTs != null) {
                         response.setNftList(userNFTs);
                     }
+                    System.out.println("Acabei de fazer tudo e vou agora colocar a resposta em bytes");
+                    byte[] res = DTIMessage.toBytes(response);
+                    System.out.println("Consegui meter a resposta em bytes");
+                    
+                    
+                    
                     return DTIMessage.toBytes(response);
             }
         } catch (IOException | ClassNotFoundException ex) {
