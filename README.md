@@ -9,8 +9,8 @@ Primeiramente, deve-se compilar o programa e para tal deve-se usar o script `gra
 Linux: `./gradlew installDist` <br>
 Windows: `gradlew installDist` <br>
 
-### Correr
-Para correr as réplicas devem-se executar os seguintes comandos na pasta build/install/library.
+### Executar
+Para executar as réplicas devem-se executar os seguintes comandos na pasta build/install/library.
 
 Linux: <br>
 `./smartrun.sh intol.bftmap.DTIServer 0` <br>
