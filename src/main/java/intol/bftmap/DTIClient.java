@@ -106,7 +106,6 @@ public class DTIClient {
             } else if (cmd.equalsIgnoreCase("MY_NFTS")) {
 
                 //invokes the op on the servers
-            	System.out.println("Vou iniciar o getMyNfts");
                 List<NFT> myNFTs = map.getMyNFTs();
 
                 if (myNFTs == null) {
@@ -119,7 +118,7 @@ public class DTIClient {
 					else {
 						System.out.println("\nYour NFTs:\n");
                     for(NFT nft : myNFTs) {
-                        System.out.println("NFT " + nft.getId() + " with name " + nft.getName() + 
+                        System.out.println("NFT with id " + nft.getId() + " with name " + nft.getName() + 
                                 ", with uri " + nft.getUri() + " and value " + nft.getValue() + " \n");
                     } 
 					}
@@ -184,7 +183,7 @@ public class DTIClient {
                 else {
                     System.out.println("\nResult NFTs:\n");
                     for(NFT nft : resultNFTs) {
-                        System.out.println("NFT " + nft.getId() + " with name " + nft.getName() + 
+                        System.out.println("NFT with id " + nft.getId() + " with name " + nft.getName() + 
                                 ", with uri " + nft.getUri() + " and value " + nft.getValue() + " \n");
                     }  
                 }

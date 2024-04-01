@@ -25,70 +25,6 @@ public class BFTMap {
     public BFTMap(int id) {
         serviceProxy = new ServiceProxy(id);
     }
-    
-//    /**
-//     *
-//     * @param key The key associated to the value
-//     * @return value The value previously added to the map
-//     */
-//    @Override
-//    public V get(Object key) {
-//        byte[] rep;
-//        try {
-//            BFTMapMessage<K,V> request = new BFTMapMessage<>();
-//            request.setType(BFTMapRequestType.GET);
-//            request.setKey(key);
-//            
-//            //invokes BFT-SMaRt
-//            rep = serviceProxy.invokeUnordered(BFTMapMessage.toBytes(request));
-//        } catch (IOException e) {
-//            logger.error("Failed to send GET request");
-//            return null;
-//        }
-//
-//        if (rep.length == 0) {
-//            return null;
-//        }
-//        try {
-//            BFTMapMessage<K,V> response = BFTMapMessage.fromBytes(rep);
-//            return response.getValue();
-//        } catch (ClassNotFoundException | IOException ex) {
-//            logger.error("Failed to deserialized response of GET request");
-//            return null;
-//        }
-//    }
-
-//    /**
-//     *
-//     * @param key The key associated to the value
-//     * @param value Value to be added to the map
-//     */
-//    @Override
-//    public V put(K key, V value) {
-//        byte[] rep;
-//        try {
-//            DTIMessage request = new DTIMessage();
-//            request.setType(DTIRequests.MINT);
-//            request.setValue(value);
-//
-//            //invokes BFT-SMaRt
-//            rep = serviceProxy.invokeOrdered(DTIMessage.toBytes(request));
-//        } catch (IOException e) {
-//            logger.error("Failed to send PUT request");
-//            return null;
-//        }
-//        if (rep.length == 0) {
-//            return null;
-//        }
-//
-//        try {
-//            BFTMapMessage<K,V> response = BFTMapMessage.fromBytes(rep);
-//            return response.getValue();
-//        } catch (ClassNotFoundException | IOException ex) {
-//            logger.error("Failed to deserialized response of PUT request");
-//            return null;
-//        }
-//    }
 
     public List<Coin> getMyCoins() {
         byte[] rep;
@@ -119,12 +55,11 @@ public class BFTMap {
     public List<NFT> getMyNFTs() {
         byte[] rep;
         try {
-        	System.out.println("Estou no getMyNfts");
             DTIMessage request = new DTIMessage();
             request.setType(DTIRequests.MY_NFTS);
             
             
-            //inWvokes BFT-SMaRt
+            //invokes BFT-SMaRt
             rep = serviceProxy.invokeUnordered(DTIMessage.toBytes(request));
         } catch (IOException e) {
             logger.error("Failed to send MY_NFTs request");
@@ -211,7 +146,6 @@ public class BFTMap {
     		request.setUri(uri);
     		
     		rep = serviceProxy.invokeOrdered(DTIMessage.toBytes(request));
-    		System.out.println("Recebi resposta do DTIServer");
     	} catch (IOException e) {
             logger.error("Failed to send MINT_NFT request");
             return -1;
@@ -311,77 +245,4 @@ public class BFTMap {
             return -1;
         }
     }
-
-//    @Override
-//    public int size() {
-//        byte[] rep;
-//        try {
-//            BFTMapMessage<K,V> request = new BFTMapMessage<>();
-//            request.setType(BFTMapRequestType.SIZE);
-//
-//            //invokes BFT-SMaRt
-//            rep = serviceProxy.invokeUnordered(BFTMapMessage.toBytes(request));
-//        } catch (IOException e) {
-//            logger.error("Failed to send SIZE request");
-//            return -1;
-//        }
-//
-//        if (rep.length == 0) {
-//            return -1;
-//        }
-//        try {
-//            BFTMapMessage<K,V> response = BFTMapMessage.fromBytes(rep);
-//            return response.getSize();
-//        } catch (ClassNotFoundException | IOException ex) {
-//            logger.error("Failed to deserialized response of SIZE request");
-//            return -1;
-//        }
-//    }
-    
-    
-
-//    @Override
-//    public V remove(Object key) {
-//        throw new UnsupportedOperationException("You are supposed to implement this method :)");
-//    }
-//
-//    @Override
-//    public Set<K> keySet() {
-//        throw new UnsupportedOperationException("You are supposed to implement this method :)");
-//    }
-//
-//    @Override
-//    public boolean containsKey(Object key) {
-//        throw new UnsupportedOperationException("You are supposed to implement this method :)");
-//    }
-//
-//    @Override
-//    public boolean isEmpty() {
-//        throw new UnsupportedOperationException("You are supposed to implement this method :)");
-//    }
-//
-//    @Override
-//    public void clear() {
-//        throw new UnsupportedOperationException("You are supposed to implement this method :)");
-//    }
-//
-//    @Override
-//    public boolean containsValue(Object value) {
-//        throw new UnsupportedOperationException("You are supposed to implement this method :)");
-//    }
-//
-//    @Override
-//    public void putAll(Map<? extends K, ? extends V> m) {
-//        throw new UnsupportedOperationException("You are supposed to implement this method :)");
-//    }
-//
-//    @Override
-//    public Collection<V> values() {
-//        throw new UnsupportedOperationException("You are supposed to implement this method :)");
-//    }
-//
-//    @Override
-//    public Set<Entry<K, V>> entrySet() {
-//        throw new UnsupportedOperationException("You are supposed to implement this method :)");
-//    }
 }

@@ -114,7 +114,6 @@ public class DTIServer<K, V> extends DefaultSingleRecoverable {
                 	replicaMapNFTs.put(counterNFTs, nft);
                 	response.setValue(counterNFTs);
                 	counterNFTs++;
-                	System.out.println("Vou enviar resposta para o BFTMap");
                 	return DTIMessage.toBytes(response);
 				case SET_NFT_PRICE:
 					int nftId = (int) request.getKey();
@@ -183,7 +182,6 @@ public class DTIServer<K, V> extends DefaultSingleRecoverable {
                     }
                     return DTIMessage.toBytes(response);
 				case MY_NFTS:
-					System.out.println("Recebi o myNFTs");
 					List<NFT> userNFTs = new ArrayList<>();
 
 					for (NFT nft2 : replicaMapNFTs.values()) {
@@ -193,13 +191,7 @@ public class DTIServer<K, V> extends DefaultSingleRecoverable {
 					
                     if (userNFTs != null) {
                         response.setNftList(userNFTs);
-                    }
-                    System.out.println("Acabei de fazer tudo e vou agora colocar a resposta em bytes");
-                    byte[] res = DTIMessage.toBytes(response);
-                    System.out.println("Consegui meter a resposta em bytes");
-                    
-                    
-                    
+                    }                              
                     return DTIMessage.toBytes(response);
             }
 
@@ -252,7 +244,6 @@ public class DTIServer<K, V> extends DefaultSingleRecoverable {
                     return DTIMessage.toBytes(response);
 
 				case MY_NFTS:
-					System.out.println("Recebi o myNFTs");
 					List<NFT> userNFTs = new ArrayList<>();
 
 					for (NFT nft : replicaMapNFTs.values()) {
@@ -262,13 +253,7 @@ public class DTIServer<K, V> extends DefaultSingleRecoverable {
 					
                     if (userNFTs != null) {
                         response.setNftList(userNFTs);
-                    }
-                    System.out.println("Acabei de fazer tudo e vou agora colocar a resposta em bytes");
-                    byte[] res = DTIMessage.toBytes(response);
-                    System.out.println("Consegui meter a resposta em bytes");
-                    
-                    
-                    
+                    }                
                     return DTIMessage.toBytes(response);
             }
         } catch (IOException | ClassNotFoundException ex) {
