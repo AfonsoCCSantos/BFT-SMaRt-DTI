@@ -5,9 +5,6 @@
 package intol.bftmap;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
 import intol.bftmap.models.Coin;
 import intol.bftmap.models.NFT;
 import java.util.List;
@@ -18,11 +15,11 @@ import org.slf4j.LoggerFactory;
 
 import bftsmart.tom.ServiceProxy;
 
-public class BFTMap {
+public class DTIStub {
     private final Logger logger = LoggerFactory.getLogger("bftsmart");
     private final ServiceProxy serviceProxy;
 
-    public BFTMap(int id) {
+    public DTIStub(int id) {
         serviceProxy = new ServiceProxy(id);
     }
 

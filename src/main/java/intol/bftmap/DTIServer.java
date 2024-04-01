@@ -76,6 +76,10 @@ public class DTIServer<K, V> extends DefaultSingleRecoverable {
 
 					for (int coinId : coinIds) {
 						Coin c = replicaMapCoins.get(coinId); 
+						if (c == null || c.getOwnerId() != msgCtx.getSender()) {
+							response.setValue(-1);
+	                		return DTIMessage.toBytes(response);
+						}
 						if(c != null) valueOfUserCoins += c.getValue();
 					}
 
@@ -137,6 +141,10 @@ public class DTIServer<K, V> extends DefaultSingleRecoverable {
 
 					for (int coinId : coinIds) {
 						Coin c = replicaMapCoins.get(coinId); 
+						if (c == null || c.getOwnerId() != msgCtx.getSender()) {
+							response.setValue(-1);
+	                		return DTIMessage.toBytes(response);
+						}
 						if(c != null) valueOfUserCoins += c.getValue();
 					}
 
@@ -171,10 +179,6 @@ public class DTIServer<K, V> extends DefaultSingleRecoverable {
 					for (Coin c : replicaMapCoins.values()) {
 						if (c.getOwnerId() == msgCtx.getSender()) 
 							userCoins.add(c); 
-					}
-					
-					for (Coin c : userCoins) {
-						System.out.println("Coin id: " + c.getId() + " Coin owner: " + c.getOwnerId());
 					}
 
                     if (userCoins != null) {

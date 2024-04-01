@@ -3,7 +3,6 @@ package intol.bftmap;
 import intol.bftmap.models.Coin;
 import intol.bftmap.models.NFT;
 import java.io.Console;
-import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -13,7 +12,7 @@ public class DTIClient {
 	
 	public static void main(String[] args) {
 		int clientId = (args.length > 0) ? Integer.parseInt(args[0]) : 1001;
-		BFTMap map = new BFTMap(clientId);
+		DTIStub map = new DTIStub(clientId);
 		
 		Console console = System.console();
 		

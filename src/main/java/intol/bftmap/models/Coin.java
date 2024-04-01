@@ -1,7 +1,6 @@
 package intol.bftmap.models;
 
 import java.io.Serializable;
-import java.util.Objects;
 
 public class Coin implements Serializable {
 	
