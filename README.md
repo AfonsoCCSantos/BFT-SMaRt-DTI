@@ -12,24 +12,24 @@ Windows: `gradlew installDist`
 ### Correr
 Para correr as réplicas devem-se executar os seguintes comandos na pasta build/install/library.
 
-Linux:
-`./smartrun.sh intol.bftmap.DTIServer 0`
-`./smartrun.sh intol.bftmap.DTIServer 1`
-`./smartrun.sh intol.bftmap.DTIServer 2`
-`./smartrun.sh intol.bftmap.DTIServer 3`
-Windows:
-`smartrun intol.bftmap.DTIServer 0`
-`smartrun intol.bftmap.DTIServer 1`
-`smartrun intol.bftmap.DTIServer 2`
-`smartrun intol.bftmap.DTIServer 3`
+Linux: <br>
+`./smartrun.sh intol.bftmap.DTIServer 0` <br>
+`./smartrun.sh intol.bftmap.DTIServer 1` <br>
+`./smartrun.sh intol.bftmap.DTIServer 2` <br>
+`./smartrun.sh intol.bftmap.DTIServer 3` <br>
+Windows: <br>
+`smartrun intol.bftmap.DTIServer 0` <br>
+`smartrun intol.bftmap.DTIServer 1` <br>
+`smartrun intol.bftmap.DTIServer 2` <br>
+`smartrun intol.bftmap.DTIServer 3` <br>
 
 Antes de inicializar o cliente deve-se esperar que os servidores estejam prontos a receber operações (Aparecerá uma mensagem na consola de cada servidor dizendo "Ready to process operations")
 
-Para inicializar um cliente deve-se executar o seguinte comando (na mesma pasta onde foram executados os comandos para executar os servidores, ie, build/install/library).
-Linux:
-`./smartrun.sh intol.bftmap.DTIClient clientId`
-Windows:
-`smartrun intol.bftmap.DTIClient clientId`
+Para inicializar um cliente deve-se executar o seguinte comando (na mesma pasta onde foram executados os comandos para executar os servidores, ie, build/install/library). <br>
+Linux: <br>
+`./smartrun.sh intol.bftmap.DTIClient clientId` <br>
+Windows: <br>
+`smartrun intol.bftmap.DTIClient clientId` <br>
 onde clientId corresponderá ao id único pretendido para o cliente (por norma, um número superior a 0)
 
 ## Notas
