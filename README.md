@@ -5,9 +5,9 @@
 
 ## Quick start
 ### Compilar
-Primeiramente, deve-se compilar o programa e para tal deve-se usar o script `gradlew`. Na pasta base do projeto deve então ser executado o seguinte comando:
-Linux: `./gradlew installDist`
-Windows: `gradlew installDist`
+Primeiramente, deve-se compilar o programa e para tal deve-se usar o script `gradlew`. Na pasta base do projeto deve então ser executado o seguinte comando: <br>
+Linux: `./gradlew installDist` <br>
+Windows: `gradlew installDist` <br>
 
 ### Correr
 Para correr as réplicas devem-se executar os seguintes comandos na pasta build/install/library.
