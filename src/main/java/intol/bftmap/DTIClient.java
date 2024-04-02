@@ -89,14 +89,13 @@ public class DTIClient {
 
                 //invokes the op on the servers
                 int id = map.spendCoins(coinIds, receiverId, value);
-                if (id == -1) {
-                	System.out.println("\nThe operation failed");
-                }
-                else if(id == 0) {
-                    System.out.println("\nNo change.");
-                }
-                else {
-                	System.out.println("\nNew coin (change) created with id " + id + ".\n");
+                if (id != -1) {
+                	if(id == 0) {
+                        System.out.println("\nNo change.");
+                    }
+                    else {
+                    	System.out.println("\nNew coin (change) created with id " + id + ".\n");
+                    }
                 }
 
             } else if (cmd.equalsIgnoreCase("MY_NFTS")) {

@@ -80,6 +80,8 @@ public class DTIServer<K, V> extends DefaultSingleRecoverable {
 						Coin c = replicaMapCoins.get(coinId); 
 						if (c == null || c.getOwnerId() != msgCtx.getSender()) {
 							response.setValue(-1);
+	                		response.setErrorMessage(c == null ? "At least one of the coins doesnt exist." : 
+	                											"At least one of the coins isnt owned."  );
 	                		return DTIMessage.toBytes(response);
 						}
 						if(c != null) valueOfUserCoins += c.getValue();
@@ -87,6 +89,7 @@ public class DTIServer<K, V> extends DefaultSingleRecoverable {
 
                 	if (valueOfUserCoins < value) {
                 		response.setValue(-1);
+                		response.setErrorMessage("The total value of the given coins is not enough.");
                 		return DTIMessage.toBytes(response);
                 	}
 
