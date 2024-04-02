@@ -149,11 +149,19 @@ public class DTIServer<K, V> extends DefaultSingleRecoverable {
                 	coinIds = request.getIdList();
 					NFT nftToBuy = replicaMapNFTs.get((int) request.getValue());  
 					valueOfUserCoins = 0;
+					
+					if(nftToBuy == null) {
+						response.setValue(-1);
+						response.setErrorMessage("NFT doesnt exist.");
+                		return DTIMessage.toBytes(response);
+					}
 
 					for (int coinId : coinIds) {
 						Coin c = replicaMapCoins.get(coinId); 
 						if (c == null || c.getOwnerId() != msgCtx.getSender()) {
 							response.setValue(-1);
+	                		response.setErrorMessage(c == null ? "At least one of the coins doesnt exist." : 
+	                											"At least one of the coins isnt owned."  );
 	                		return DTIMessage.toBytes(response);
 						}
 						if(c != null) valueOfUserCoins += c.getValue();
@@ -161,6 +169,7 @@ public class DTIServer<K, V> extends DefaultSingleRecoverable {
 
                 	if (valueOfUserCoins < nftToBuy.getValue()) {
                 		response.setValue(-1);
+                		response.setErrorMessage("The total value of the given coins is not enough.");
                 		return DTIMessage.toBytes(response);
                 	}
 

@@ -247,12 +247,16 @@ public class DTIStub {
         }
     	
     	if (rep.length == 0) {
+    		System.out.println("\n The operation failed");
             return -1;
         }
     	
     	try {
     		DTIMessage response = DTIMessage.fromBytes(rep);
-    		return (int) response.getValue();
+    		int responseValue = (int) response.getValue();
+    		if(responseValue == -1)  
+    			System.out.println(response.getErrorMessage());
+    		return responseValue;
     	} catch (ClassNotFoundException | IOException ex) {
             logger.error("Failed to deserialized response of BUY_NFT request");
             return -1;
