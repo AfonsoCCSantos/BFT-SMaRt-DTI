@@ -122,6 +122,7 @@ public class DTIServer<K, V> extends DefaultSingleRecoverable {
                 	response.setValue(counterNFTs);
                 	counterNFTs++;
                 	return DTIMessage.toBytes(response);
+                	
 				case SET_NFT_PRICE:
 					int nftId = (int) request.getKey();
                 	nftValue = (double) request.getValue();
@@ -129,6 +130,9 @@ public class DTIServer<K, V> extends DefaultSingleRecoverable {
 
                 	if (nft == null || msgCtx.getSender() != nft.getOwnerId() || nftValue <= 0) {
                 		response.setValue(-1);
+                		String message = nft == null ? "NFT doesnt exist." : 
+                			(nftValue <= 0 ? "Value needs to be greater than zero." : "NFT not owned."); 
+                		response.setErrorMessage(message);
                 		return DTIMessage.toBytes(response);
                 	}
 
@@ -137,6 +141,7 @@ public class DTIServer<K, V> extends DefaultSingleRecoverable {
 
                 	response.setValue(nft.getId());
                 	return DTIMessage.toBytes(response);
+                	
 				case BUY_NFT:
                 	coinIds = request.getIdList();
 					NFT nftToBuy = replicaMapNFTs.get((int) request.getValue());  

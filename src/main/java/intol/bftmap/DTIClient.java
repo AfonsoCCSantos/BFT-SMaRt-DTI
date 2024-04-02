@@ -158,10 +158,7 @@ public class DTIClient {
                 
                 // invokes the op on the servers
                 int id = map.setNFTPrice(nftId, newValue);
-                if (id == -1) {
-                	System.out.println("\n The operation failed");
-                }
-                else {
+                if (id != -1) {
                 	System.out.println("\nThe NFT with id " + id + " was changed.\n");		
                 }
 			} else if (cmd.equalsIgnoreCase("SEARCH_NFT")) {
