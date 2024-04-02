@@ -61,11 +61,8 @@ public class DTIClient {
               
                 //invokes the op on the servers
                 int id = map.mintCoin(value);
-                if (id == -1) {
-                	System.out.println("\n The operation failed");
-                }
-                else {
-                	System.out.println("\nThe coin with the value given was added to the map with id " + id + ".\n");		
+                if (id != -1) {
+                	System.out.println("\nThe coin with the value given was added to the map with id " + id + ".\n");
                 }
             } else if (cmd.equalsIgnoreCase("SPEND")) {
                 List<Integer> coinIds = new ArrayList<>();

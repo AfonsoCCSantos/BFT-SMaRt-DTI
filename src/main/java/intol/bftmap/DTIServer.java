@@ -60,6 +60,8 @@ public class DTIServer<K, V> extends DefaultSingleRecoverable {
                 	double coinValue = (double) request.getValue();
                 	if (msgCtx.getSender() != AUTHORIZED_CLIENT_TO_MINT || coinValue <= 0) {
                 		response.setValue(-1);
+                		response.setErrorMessage(coinValue <= 0 ? "Value needs to be greater than zero." : 
+                															 "Operation not authorized."  );
                 		return DTIMessage.toBytes(response);
                 	}
                 	Coin coin = new Coin(counterCoins, msgCtx.getSender() , coinValue);

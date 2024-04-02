@@ -26,6 +26,7 @@ public class DTIMessage implements Serializable {
 	private double value;
 	private String name;
 	private String uri;
+	private String errorMessage;
     private List<Coin> coinList;
     private List<NFT> nftList;
     private List<Integer> idList;
@@ -128,4 +129,14 @@ public class DTIMessage implements Serializable {
 	public void setKey(int key) {
 		this.key = key;
 	}
+
+	public String getErrorMessage() {
+		return errorMessage;
+	}
+
+	public void setErrorMessage(String errorMessage) {
+		this.errorMessage = errorMessage;
+	}
+	
+	
 }
