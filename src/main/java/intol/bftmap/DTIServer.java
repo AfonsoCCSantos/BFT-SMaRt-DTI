@@ -113,6 +113,7 @@ public class DTIServer<K, V> extends DefaultSingleRecoverable {
                 	double nftValue = (double) request.getValue();
                 	if (nftValue <= 0) {
                 		response.setValue(-1);
+                		response.setErrorMessage("Value needs to be greater than zero.");
                 		return DTIMessage.toBytes(response);
                 	}
                 	
